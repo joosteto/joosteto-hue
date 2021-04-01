@@ -19,6 +19,10 @@ python3 hue.py  --hue 2 --bri 1
 Show json response for a '/lights/2' http GET request:
 python3 hue.py --get /lights/2
 
+(Very) warm white:
+python3 hue.py --xy 0.6,0.4 --bri 1
+
+
 Continuously check for long 'off' button press on switch id=4, and if 
 python3 hue.py --checklong0 4
 
@@ -228,11 +232,13 @@ def main():
     parser.add_argument('--checklong0',
                         help='continuously check for long 0 press on sensor id')
     parser.add_argument('--hue',
-                        help="set hue of specified lamps")
+                        help="set hue of specified lamps (range: 0..360)")
     parser.add_argument('--sat',
-                        help='set saturation of specified lamps')
+                        help='set saturation of specified lamps (range: 0..1)')
     parser.add_argument('--bri',
-                        help='set brightness of specified lamps')
+                        help='set brightness of specified lamps (range: 0..1)')
+    parser.add_argument('--briB',
+                        help='set brightness of specified lamps (range: 0..255)')
     parser.add_argument('--xy',
                         help='set xy color of specified lamps. Example: --xy 0.3,0.7')
 
@@ -282,7 +288,7 @@ def main():
     
         for lid in lamps:
             if args.hue is not None:
-                hue=int(float(args.hue)*2**16//6) % 2**16
+                hue=int(float(args.hue)*2**16//360) % 2**16
                 #print(f"setting {lid} to hue={hue}")
                 set_lightstate(lid, "hue", hue)
                 
@@ -293,10 +299,15 @@ def main():
             if args.xy is not None:
                 xy=list(eval(args.xy))
                 set_lightstate(lid, "xy", xy)
-    
+
+            bri=None
             if args.bri is not None:
                 bri=int(255*eval(args.bri))
+            if args.briB is not None:
+                bri=int(eval(args.briB))
+            if bri is not None:
                 set_lightstate(lid, "bri", bri)
+                
     except LinkButtonNotPressed as e:
         print("To get a valid user access code, the button on the bridge needs to be pressed shortly before the --getaccess command is used")
     except BridgeError as e:

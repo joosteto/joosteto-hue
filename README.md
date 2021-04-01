@@ -10,9 +10,9 @@ Get a valid access code from the bridge:
    `python3 hue.py --getuser yourusername`
 3) The access code will be saved in the file `accesscode`, and used for next commands.
 
-Make all lamps as bright as possible, and green. Hue ranges from 0 (red) to 6 (red again), Bri(ghtness) from 0 to 1:
+Make all lamps as bright as possible, and green. Hue ranges from 0 (red) to 360 (red again), Bri(ghtness) from 0 to 1:
 
-`python3 hue.py  --hue 2 --bri 1`
+`python3 hue.py  --hue 120 --bri 1`
 
 To make lamp 1 red and lamps 2 and 3 blue:
 ```
