@@ -219,7 +219,7 @@ def main():
     parser.add_argument('--user',
                         help='user (effectively password) at the bridge. If not given, read from file username')
     parser.add_argument('--bridge',
-                        help='hostname/IP of the bridge. Default: philips-hue.local')
+                        help='hostname/IP of the bridge. Default: philips-hue.local, or the contents of the file "bridge" in the current directory')
     parser.add_argument('--getuser',
                         help='get username (security code) from bridge (after button on bridge is pressed)')
 
@@ -252,7 +252,9 @@ def main():
     #configuration
     if args.bridge is not None:
         bridgeAddr=args.bridge
-
+    else:
+        if os.path.exists('bridge'):
+            bridgeAddr=open('bridge','r').read().strip()
     try:
         if args.getuser is not None:
             getuser(args.getuser)
